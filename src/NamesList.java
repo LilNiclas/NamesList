@@ -80,9 +80,9 @@ public class NamesList {
             name = sc.nextLine();
             if (!name.isBlank()) {
                 names.add(name);
-                System.out.println(names.size() + " names loaded");
             }
         }
+        System.out.println(names.size() + " names loaded");
     }
 
     private void displayListOfNames() {
