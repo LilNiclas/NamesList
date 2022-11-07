@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,7 +12,7 @@ public class NamesList {
         names = new ArrayList<>();
     }
 
-    public void startUserInterface() {
+    public void startUserInterface() throws FileNotFoundException {
         System.out.println("""
                 Welcome to the NamesList - enterprise edition.
                 ----------------------------------------------
@@ -17,7 +20,7 @@ public class NamesList {
 
         Scanner sc = new Scanner(System.in);
         int choice = 99;
-        while( choice != 0) {
+        while (choice != 0) {
             showMenu();
             choice = sc.nextInt();
             switch (choice) {
@@ -35,7 +38,7 @@ public class NamesList {
     private void showMenu() {
         System.out.println("""
                 1) Display list of names
-                2) Load list of names (not implemented)
+                2) Load list of names
                 3) Save list of names (not implemented)
                 4) Enter names
                 0) Exit
@@ -50,9 +53,9 @@ public class NamesList {
                 """);
         Scanner sc = new Scanner(System.in);
         String name = "-nothing yet-";
-        while(!name.isBlank() && sc.hasNextLine()) {
+        while (!name.isBlank() && sc.hasNextLine()) {
             name = sc.nextLine();
-            if(!name.isBlank()) {
+            if (!name.isBlank()) {
                 names.add(name);
                 System.out.println(name + " added to the list, enter another, or empty to quit");
             }
@@ -60,27 +63,39 @@ public class NamesList {
         System.out.println("Done");
     }
 
-    private void saveListOfNames() {
-        // TODO: Implement save of the names list to a file
-        System.out.println("NOT IMPLEMENTED");
+    private void saveListOfNames() throws FileNotFoundException {
+        PrintStream output = new PrintStream(new File("data/names.txt"));
+        for (String name : names) {
+            output.println(name);
+        }
+        System.out.println("All names have been saved");
     }
 
-    private void loadListOfNames() {
-        // TODO: Implement load of the names list from a file
-        System.out.println("NOT IMPLEMENTED");
+    private void loadListOfNames() throws FileNotFoundException {
+        names.clear();
+
+        Scanner sc = new Scanner(new File("data" + File.separator + "names.txt"));
+        String name = "-nothing yet-";
+        while (!name.isBlank() && sc.hasNextLine()) {
+            name = sc.nextLine();
+            if (!name.isBlank()) {
+                names.add(name);
+                System.out.println(names.size() + " names loaded");
+            }
+        }
     }
 
     private void displayListOfNames() {
-        for(String name : names) {
+        for (String name : names) {
             System.out.println(name);
         }
         String isAre = "are";
         String s = "s";
-        if(names.size() == 1) {
+        if (names.size() == 1) {
             isAre = "is";
             s = "";
         }
-        System.out.println("There " + isAre + " " + names.size() + " name"+s+" in the system");
+        System.out.println("There " + isAre + " " + names.size() + " name" + s + " in the system");
     }
 
     private void exit() {
@@ -92,7 +107,10 @@ public class NamesList {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+
+        PrintStream output = new PrintStream(new File("names.txt"));
+
         NamesList app = new NamesList();
         app.startUserInterface();
     }
